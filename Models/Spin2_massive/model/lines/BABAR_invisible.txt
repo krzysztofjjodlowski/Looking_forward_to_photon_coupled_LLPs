@@ -1,0 +1,7 @@
+# Lines from fig 8 of https://arxiv.org/abs/2210.00751 
+# Note: this is hidden energy search for invisibly decaying G (massive spin-2 mediator)!
+# m_G [GeV]    c_l [1/GeV]
+0.001    0.00022641363480265913
+10    0.00022459269200274134
+10    1
+0    1

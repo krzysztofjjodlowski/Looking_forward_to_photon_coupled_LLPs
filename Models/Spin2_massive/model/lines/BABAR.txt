@@ -1,0 +1,6 @@
+# Lines from https://arxiv.org/abs/2210.00751 
+# m_G [GeV]    c_l [1/GeV]
+0.001    3e-5
+10    3e-5
+10    1
+0    1
