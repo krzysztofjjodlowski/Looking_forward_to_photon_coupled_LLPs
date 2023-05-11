@@ -2,14 +2,12 @@
 **By Krzysztof Jodlowski**
 
 We present modified version of [FORESEE](https://github.com/KlingFelix/FORESEE), where we implement:
-- implementing secondary LLP production by coherent upscattering at FASER$\nu$2, followed by decay at either FASER$\nu$2 or FASER2, and electron scattering
-- implementing displaced decay signature and secondary production routines at MATHUSLA
-- implementing displaced decay signature at beam dump experiments, e.g., CHARM, NuCal, SHiP
-
+1. secondary LLP production by coherent upscattering at $\text{FASER}\nu2$, followed by decay at either $\text{FASER}\nu2$ or $\text{FASER}2$, and electron scattering
+2. displaced decay signature and secondary production routines at MATHUSLA
+3. displaced decay signature at beam dump experiments, e.g., CHARM, NuCal, SHiP
 
 
 ### Papers
-
 ```
 @article{Jodlowski:2023yne,
     author = "Jod\l{}owski, Krzysztof",
@@ -22,6 +20,7 @@ We present modified version of [FORESEE](https://github.com/KlingFelix/FORESEE),
 }
 ```
 
+
 # FORESEE: FORward Experiment SEnsitivity Estimator
 
 **By Felix Kling and Sebastian Trojanowski**
@@ -32,7 +31,6 @@ We present the numerical package **FOR**ward **E**xperiment **SE**nsitivity **E*
 
 Our main publication [FORESEE: FORward Experiment SEnsitivity Estimator for the LHC and future hadron colliders](https://arxiv.org/abs/2105.07077)
 provides an overview over this package. We recommend reading it first before jumping into the code.
-
 
 ```
 @article{Kling:2021fwx,
