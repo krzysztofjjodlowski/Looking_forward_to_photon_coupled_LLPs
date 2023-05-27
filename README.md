@@ -7,7 +7,7 @@ We present modified version of [FORESEE](https://github.com/KlingFelix/FORESEE),
 3. displaced decay signature at beam dump experiments, e.g., CHARM, NuCal, SHiP
 
 
-### Papers
+### Models implemented from papers:
 ```
 @article{Jodlowski:2023yne,
     author = "Jod\l{}owski, Krzysztof",
@@ -18,7 +18,19 @@ We present modified version of [FORESEE](https://github.com/KlingFelix/FORESEE),
     month = "5",
     year = "2023"
 }
+
+@article{Jodlowski:2023sbi,
+    author = "Jod\l{}owski, Krzysztof",
+    title = "{Looking forward to photon-coupled long-lived particles II: dark axion portal}",
+    eprint = "2305.10409",
+    archivePrefix = "arXiv",
+    primaryClass = "hep-ph",
+    month = "5",
+    year = "2023"
+}
 ```
+
+If you use this code, please cite one of the above papers, and, please, cite the original FORESEE work: \cite{Kling:2021fwx}.
 
 
 # FORESEE: FORward Experiment SEnsitivity Estimator
@@ -53,4 +65,3 @@ provides an overview over this package. We recommend reading it first before jum
 - FASER Physics Case: [1811.12522](https://arxiv.org/abs/1811.12522)
 - FASER Technical Proposal: [1812.09139](https://arxiv.org/abs/1812.09139)
 - Forward Physics Facility: [Snowmass LOI](https://zenodo.org/record/4009641)
-
