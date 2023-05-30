@@ -28,6 +28,16 @@ We present modified version of [FORESEE](https://github.com/KlingFelix/FORESEE),
     month = "5",
     year = "2023"
 }
+
+@article{Jodlowski:2023ohn,
+    author = "Jod\l{}owski, Krzysztof",
+    title = "{Looking forward to photon-coupled long-lived particles III: inelastic DM with EM form factors}",
+    eprint = "2305.16781",
+    archivePrefix = "arXiv",
+    primaryClass = "hep-ph",
+    month = "5",
+    year = "2023"
+}
 ```
 
 If you use this code, please cite one of the above papers, and, please, cite the original FORESEE work: \cite{Kling:2021fwx}.
