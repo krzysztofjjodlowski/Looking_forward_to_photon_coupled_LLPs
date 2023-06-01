@@ -1544,3 +1544,281 @@ def cr_sigma_chi1e_chi0e_log(LambdaCR, s, m1, m3, ERmin, ERmax, t_min, t_max, is
 
 
 
+## Axino(atilde)-neutralino(chitilde)-photon
+def Gamma_chitilde_gatilde(f_a, m_chitilde, m_atilde, C_agg=1.0):
+    m1, m2, m3 = m_chitilde, 0.0, m_atilde
+    if m_chitilde < m_atilde:
+        return 0.0
+    return COS_WEINBERG**2 * (ALPHA_EM**2 * C_agg**2 * (m1**2 - m3**2)**3) / (128. * f_a**2 * m1**3 * np.pi**3)
+
+def Gamma_chitilde_llatilde(f_a, m_chitilde, m_atilde, m_l=M_ELECTRON, C_agg=1.0):
+    """
+    Args:
+        f_a (float): 
+        m_chitilde (float): 
+        m_atilde (float): 
+        m_l (float, optional): . 
+        C_agg (float, optional): . 
+
+    Returns:
+        float: 
+    """
+    m0 = m_chitilde
+    m1 = m2 = m_l
+    m3 = m_atilde
+
+    s12_min_, s12_max_ = (m1 + m2)**2, (m0 - m3)**2
+
+    if m0 < m1 + m2 + m3:
+        return 0.0
+
+    integrand = lambda s23, s12: COS_WEINBERG**2 * (ALPHA_EM**3 * C_agg**2 * (2 * m1**4 * s12 + m0**4 * (2 * m1**2 + s12) + 2 * m0 * m3 * s12 * (2 * m1**2 + s12) + s12 * (m3**4 + 2 * s23 * (s12 + s23) - m3**2 * (s12 + 2 * s23)) + 2 * m1**2 * (m3**4 - s12 * (s12 + 2 * s23)) - m0**2 * (4 * m1**2 * m3**2 + s12 * (s12 + 2 * s23)))) / (256. * f_a**2 * m0**3 * np.pi**4 * s12**2)
+
+    return custom_dblquad(integrand, s12_min_, s12_max_,
+                          lambda s12: s23_min_s12(s12, m0, m1, m2, m3),
+                          lambda s12: s23_max_s12(s12, m0, m1, m2, m3))[0]
+
+def Gamma_chitilde_llatilde_massless_atilde(f_a, m_chitilde, m_atilde, m_l=M_ELECTRON, C_agg=1.0):
+    m0 = m_chitilde
+    m1 = m2 = m_l
+    m3 = m_atilde
+
+    if m0 < m1 + m2 + m3:
+        return 0.0
+
+    return -COS_WEINBERG**2 * (ALPHA_EM**3 * C_agg**2 * (2 * m0**6 - 9 * m0**4 * m1**2 + 16 * m1**6 + 3 * m0**6 * np.log( (2 * m1) / m0))) / (576. * f_a**2 * m0**3 * np.pi**4)
+
+
+def sigma_atildeNucleus_chitildeNucleus_analyt(f_a, s, m1, m3, Z=Z_TUNGSTEN, A=A_TUNGSTEN, C_agg=1.0, t_max=-1e-15):
+    """ atilde (p1) + Nucleus (p2) -> chitilde (p3) + Nucleus (p4)
+    """
+    m2 = m4 = Z * M_PROTON + (A - Z) * M_NEUTRON  # Nucleus mass in GeV
+
+    if not s >= (m1 + m2)**2 or not s >= (m3 + m4)**2: return 0
+
+    if t_max > 0 or t_max < -1: return 0.0
+    if t_max > -1e-15: t_max = -1e-15
+
+    a, d = 111.0 * Z**(-1.0 / 3.0) / M_ELECTRON, 0.164 * A**(-2.0 / 3.0)
+    sigma = COS_WEINBERG**2 * C_agg**2 * ALPHA_EM**3 * Z**2 * (np.log(d / (1 / a**2  - t_max)) - 2.) / (16.0 * np.pi**2 * f_a**2)
+    return 0.0 if sigma<0 else sigma
+
+def sigma_atildee_chitildee_analyt(f_a, s, m1, m3, ERmin, ERmax, t_min, t_max, C_agg=1.0):
+    m2 = m4 = M_ELECTRON
+
+    if not s >= (m1 + m2)**2 or not s >= (m3 + m4)**2: return 0
+
+    ER_min, ER_max = ERmin, ERmax
+    
+    if t_min >= t_max: return 0
+    ER_min_t = m2 - t_max / (2 * m2)
+    ER_max_t = m2 - t_min / (2 * m2)
+    if ER_min_t >= ER_max_t: return 0
+
+    ER_min, ER_max = max(ER_min, ER_min_t), min(ER_max, ER_max_t)
+    if ER_min >= ER_max: return 0
+
+    sigma = C_agg**2 * ALPHA_EM**3 * np.log(ER_max / ER_min) / (16.0 * np.pi**2 * f_a**2)
+    return 0.0 if sigma<0 else COS_WEINBERG**2 * sigma
+
+
+
+## Gravitino(gtilde)-neutralino(chitilde)-photon
+def Gamma_chitilde_ggtilde(m_chitilde, m_gtilde):
+    m0, m1, m2 = m_chitilde, m_gtilde, 0.0
+    if m0 < m1 + m2:
+        return 0.0
+
+    # # limit for m1->0
+    # Gamma_chitilde = (KAPPA**2 * m0**5) / (48. * m1**2 * np.pi)
+
+    # general expression
+    Gamma_chitilde = COS_WEINBERG**2 * (KAPPA**2 * (m0**2 - m1**2)**3 * (m0**2 + m1**2)) / (48. * m0**3 * m1**2 * np.pi)
+    return Gamma_chitilde
+
+def Gamma_chitilde_llgtilde(m_chitilde, m_gtilde, m_l=M_ELECTRON):
+    m0 = m_chitilde
+    m1 = m2 = m_l
+    m3 = m_gtilde
+
+    s12_min_, s12_max_ = (m1 + m2)**2, (m0 - m3)**2
+
+    if m0 < m1 + m2 + m3:
+        return 0.0
+
+    integrand = lambda s23, s12: COS_WEINBERG**2 * (ALPHA_EM * KAPPA**2 * (m0**6 * (2 * m1**2 + s12) + 4 * m0 * m3**3 * s12 * (2 * m1**2 + s12) - m0**4 * (2 * m1**2 * (m3**2 + 2 * s12) + s12 * (-m3**2 + 3 * s12 + 2 * s23)) + (m3**2 - s12) * (2 * m1**4 * s12 + 2 * m1**2 * (m3**4 + m3**2 * s12 - 2 * s12 * s23) + s12 * (m3**4 + s12**2 - 2 * m3**2 * s23 + 2 * s12 * s23 + 2 * s23**2)) + m0**2 * (2 * m1**4 * s12 - 2 * m1**2 * (m3**4 - 2 * m3**2 * s12 - s12 * (s12 - 2 * s23)) + s12 * (m3**4 + 3 * s12**2 + 4 * s12 * s23 + 2 * s23**2 - 2 * m3**2 * (s12 + 2 * s23))))) / (96. * m0**3 * m3**2 * np.pi**2 * s12**2)
+
+    return custom_dblquad(integrand, s12_min_, s12_max_,
+                          lambda s12: s23_min_s12(s12, m0, m1, m2, m3),
+                          lambda s12: s23_max_s12(s12, m0, m1, m2, m3))[0]
+
+def Gamma_chitilde_llgtilde_massless_gtilde(m_chitilde, m_gtilde, m_l=M_ELECTRON):
+    m0 = m_chitilde
+    m1 = m2 = m_l
+    m3 = m_gtilde
+
+    if m0 < m1 + m2 + m3:
+        return 0.0
+
+    return -COS_WEINBERG**2 * (ALPHA_EM * KAPPA**2 * (m0 * np.sqrt(m0**2 - 4 * m1**2) * (15 * m0**6 - 74 * m0**4 * m1**2 - 58 * m0**2 * m1**4 + 36 * m1**6) + 16 * m1**4 * (6 * m0**4 - 16 * m0**2 * m1**2 + 9 * m1**4) * np.arctanh(np.sqrt(1 - (4 * m1**2) / m0**2)) + 8 * (m0**8 - 24 * m0**4 * m1**4) * np.log( (2 * m1) / (m0 + np.sqrt(m0**2 - 4 * m1**2))))) / (576. * m0**3 * m3**2 * np.pi**2)
+
+
+def sigma_gtildeNucleus_chitildeNucleus_analyt(coupling, s, m1, m3, Z=Z_TUNGSTEN, A=A_TUNGSTEN, t_max=-1e-15):
+    """ 
+    gtilde(p1) + Nucleus(p2) -> chitilde(p3) + Nucleus(p4)
+    """
+    m2 = m4 = Z * M_PROTON + (A - Z) * M_NEUTRON  # Nucleus mass in GeV
+
+    # m1 is a dummy variable that gets overwritten:
+    # m1 = m_gtilde = (1.0/coupling) / np.sqrt(3) / M_PLANCK_REDUCED       
+    F = 1.0 / coupling                       # [coupling = 1/F = 1/GeV**2
+                                             # F = np.sqrt(3) * m_gtilde * M_PLANCK_REDUCED] 
+    m1 = F / np.sqrt(3) / M_PLANCK_REDUCED   # m_gtilde
+
+    if not s >= (m1 + m2)**2 or not s >= (m3 + m4)**2: return 0
+
+    if t_max > 0 or t_max < -1: return 0.0
+    if t_max > -1e-15: t_max = -1e-15
+
+    a, d = 111.0 * Z**(-1.0 / 3.0) / M_ELECTRON, 0.164 * A**(-2.0 / 3.0)
+
+    low_mass = (ALPHA_EM * KAPPA**2 * Z**2 * d) / (6*m1**2) if m3 < 1.0 else 0
+
+    high_mass = ALPHA_EM * KAPPA**2 * Z**2 * m3**2 * (np.log(d / (1 / a**2  - t_max)) - 2.) / (6 * m1**2)
+
+    sigma = low_mass + high_mass if high_mass>0 else low_mass
+    return 0.0 if sigma<0 else COS_WEINBERG**2 * sigma
+
+def sigma_gtildeNucleus_chitildeNucleus_log(coupling, s, m1, m3, Z=Z_TUNGSTEN, A=A_TUNGSTEN, t_max=-1e-15):
+    m2 = m4 = Z * M_PROTON + (A - Z) * M_NEUTRON  # Nucleus mass in GeV
+
+    # m1 is a dummy variable that gets overwritten:
+    # m1 = m_gtilde = (1.0/coupling) / np.sqrt(3) / M_PLANCK_REDUCED       
+    F = 1.0 / coupling                       # [coupling = 1/F = 1/GeV**2
+                                             # F = np.sqrt(3) * m_gtilde * M_PLANCK_REDUCED] 
+    m1 = F / np.sqrt(3) / M_PLANCK_REDUCED   # m_gtilde
+
+    if not s >= (m1 + m2)**2 or not s >= (m3 + m4)**2: return 0
+
+    if t_max > 0 or t_max < -1: return 0.0
+    if t_max > -1e-15: t_max = -1e-15
+
+    t_min = -t_max
+    t_max = 1.0
+
+    log10t_min, log10t_max, nlogt = np.log10(t_min), np.log10(t_max), 2000
+    dlog10t = (log10t_max - log10t_min) / float(nlogt)
+    sigma = 0
+
+    # df  = df / dx * dx = df/dx * dlog10x * x * log10
+    for log10t in np.linspace(log10t_min, log10t_max, nlogt):
+        t = -10**log10t
+
+        ff2 = Z**2 * np.abs(atomic_nuclear_form_factor(np.sqrt(-t), A, Z))**2
+        
+        amp2 = (-4*ALPHA_EM*KAPPA**2*np.pi*(3*m1**6*(2*m2**2 + t) + 8*m1**3*m3*t*(2*m2**2 + t) + m1**4*(-10*m2**2*m3**2 + (m3**2 - 6*s - 3*t)*t) + (m3**2 - t)*(2*m2**4*t + 2*m2**2*(m3**4 - (m3**2 + 2*s)*t) + t*(m3**4 + 2*s**2 + 2*s*t + t**2 - 2*m3**2*(s + t))) + m1**2*(6*m2**4*t + t*(3*m3**4 + 6*s**2 + 8*s*t + t**2 - 4*m3**2*(2*s + t)) + 2*m2**2*(m3**4 + 2*m3**2*t - 3*t*(2*s + t))))) / (3.*m1**2*t**2)
+
+        dsigmadt = amp2 / (16. * np.pi * (m1**4 + (m2**2 - s)**2 - 2*m1**2*(m2**2 + s)))
+
+        sigma += t * ff2 * dsigmadt
+
+    sigma = -sigma * dlog10t * np.log(10)
+    return 0.0 if sigma<0 else COS_WEINBERG**2 * sigma
+
+def sigma_gtildee_chitildee_analyt(coupling, s, m1, m3, ERmin, ERmax, t_min, t_max):
+    m2 = m4 = M_ELECTRON
+
+    # m1 is a dummy variable that gets overwritten: m1 = m_gtilde = (1.0/coupling) / np.sqrt(3) / M_PLANCK_REDUCED       
+    F = 1.0/coupling                         # [coupling = 1/F = 1/GeV**2
+                                             # F = np.sqrt(3) * m_gtilde * M_PLANCK_REDUCED] 
+    m1 = F/np.sqrt(3)/M_PLANCK_REDUCED       # m_gtilde
+
+    if not s >= (m1 + m2)**2 or not s >= (m3 + m4)**2: return 0
+
+    # m1 is a dummy variable that gets overwritten:
+    # m1 = m_gtilde = (1.0/coupling) / np.sqrt(3) / M_PLANCK_REDUCED       
+    F = 1.0 / coupling                       # [coupling = 1/F = 1/GeV**2
+                                             # F = np.sqrt(3) * m_gtilde * M_PLANCK_REDUCED] 
+    m1 = F / np.sqrt(3) / M_PLANCK_REDUCED   # m_gtilde
+
+    ER_min, ER_max = ERmin, ERmax
+    
+    if t_min >= t_max: return 0
+    ER_min_t = m2 - t_max / (2 * m2)
+    ER_max_t = m2 - t_min / (2 * m2)
+    if ER_min_t >= ER_max_t: return 0
+
+    ER_min, ER_max = max(ER_min, ER_min_t), min(ER_max, ER_max_t)
+    if ER_min >= ER_max: return 0
+
+    low = (ALPHAEM * (ER_max - ER_min) * KAPPA**2 * m2) / (3. * m1**2)
+
+    high = (ALPHAEM * np.log(ER_max/ER_min) * KAPPA**2 * m3**2) / (6. * m1**2)
+
+    sigma = high + low if high>0 else low
+    return 0.0 if sigma<0 else COS_WEINBERG**2 * sigma
+
+def sigma_gtildee_chitildee_log(coupling, s, m1, m3, ERmin, ERmax, t_min, t_max, isFLARE=False):
+    m2 = m4 = M_ELECTRON
+
+    # m1 is a dummy variable that gets overwritten: m1 = m_gtilde = (1.0/coupling) / np.sqrt(3) / M_PLANCK_REDUCED       
+    F = 1.0/coupling                         # [coupling = 1/F = 1/GeV**2
+                                             # F = np.sqrt(3) * m_gtilde * M_PLANCK_REDUCED] 
+    m1 = F/np.sqrt(3)/M_PLANCK_REDUCED       # m_gtilde
+
+    if not s >= (m1 + m2)**2 or not s >= (m3 + m4)**2: return 0
+
+    if isFLARE:
+        ERmin, ERmax = 30e-3, 1.0
+    else:
+        ERmin, ERmax = 0.3, 20.0
+
+    ER_min, ER_max = ERmin, ERmax
+
+    if t_min >= t_max: return 0
+    ER_min_t = m2 - t_max / (2 * m2)
+    ER_max_t = m2 - t_min / (2 * m2)
+    if ER_min_t >= ER_max_t: return 0
+    ER_min, ER_max = max(ER_min, ER_min_t), min(ER_max, ER_max_t)
+    if ER_min >= ER_max: return 0
+
+    log10ER_min, log10ER_max, nlogER = np.log10(ER_min), np.log10(ER_max), 250
+    dlog10ER = (log10ER_max - log10ER_min) / float(nlogER)
+    sigma = 0
+
+    # df  = df / dx * dx = df/dx * dlog10x * x * log10
+    for log10ER in np.linspace(log10ER_min, log10ER_max, nlogER):
+        ER = 10**log10ER  # ER=E4 is energy recoil of target
+
+        t = 2 * m2 * (m2 - ER)
+        u = m1**2 + m2**2 + m3**2 + m4**2 - s - t
+
+        E3 = (m2**2 + m3**2 - u) / (2 * m2)
+        p3 = np.sqrt(E3**2 - m3**2)
+        pR = np.sqrt(ER**2 - m4**2)
+
+        angle = np.arccos((E3 * ER - 0.5 * (s - m3**2 - m4**2)) / p3 / pR)
+
+        if ER > 10:
+            cuts = (10 * 1e-3 < angle < 20 * 1e-3)
+        elif 3 < ER < 10:
+            cuts = (10 * 1e-3 < angle < 30 * 1e-3)
+        elif ER < 3:
+            cuts = (10 * 1e-3 < angle)
+
+        if isFLARE: cuts = True
+
+        if not cuts: continue
+
+        amp2 = (-4*ALPHA_EM*KAPPA**2*np.pi*(3*m1**6*(2*m2**2 + t) + 8*m1**3*m3*t*(2*m2**2 + t) + m1**4*(-10*m2**2*m3**2 + (m3**2 - 6*s - 3*t)*t) + (m3**2 - t)*(2*m2**4*t + 2*m2**2*(m3**4 - (m3**2 + 2*s)*t) + t*(m3**4 + 2*s**2 + 2*s*t + t**2 - 2*m3**2*(s + t))) + m1**2*(6*m2**4*t + t*(3*m3**4 + 6*s**2 + 8*s*t + t**2 - 4*m3**2*(2*s + t)) + 2*m2**2*(m3**4 + 2*m3**2*t - 3*t*(2*s + t))))) / (3.*m1**2*t**2)
+
+        dsigmadt = amp2 / (16. * np.pi * (m1**4 + (m2**2 - s)**2 - 2*m1**2*(m2**2 + s)))
+
+        sigma += 2 * m2 * ER * dsigmadt
+
+    sigma *= dlog10ER * np.log(10)
+    return 0.0 if sigma<0 else COS_WEINBERG**2 * sigma
+
+
+
+

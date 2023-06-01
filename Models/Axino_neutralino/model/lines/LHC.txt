@@ -1,0 +1,4 @@
+# Lines from fig 2 of https://arxiv.org/pdf/1902.10475.pdf
+# m_chitilde [GeV]    1/f_a [1/GeV]
+20.0e-3       0.01932580511188452
+2000.0e-3     0.01932580511188452
