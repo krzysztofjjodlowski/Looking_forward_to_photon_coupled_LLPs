@@ -38,6 +38,16 @@ We present modified version of [FORESEE](https://github.com/KlingFelix/FORESEE),
     month = "5",
     year = "2023"
 }
+
+@article{Jodlowski:2023fvz,
+    author = "Jod\l{}owski, Krzysztof",
+    title = "{Looking forward to photon-coupled long-lived particles IV: neutralino-ALPino/gravitino}",
+    eprint = "2306.00982",
+    archivePrefix = "arXiv",
+    primaryClass = "hep-ph",
+    month = "6",
+    year = "2023"
+}
 ```
 
 If you use this code, please cite one of the above papers, and, please, cite the original FORESEE work: \cite{Kling:2021fwx}.
